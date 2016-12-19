@@ -9,6 +9,12 @@ import qualified Data.Vector as V
 
 newtype JStore = JStore { store :: HM.HashMap String String }
 
+empty :: JStore
+empty = JStore $ HM.empty
+
+listAll :: JStore -> [(String, String)]
+listAll = HM.toList . store
+
 query :: String -> JStore -> Maybe String
 query key JStore{..} = HM.lookup key store
 
