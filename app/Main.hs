@@ -1,6 +1,7 @@
 {-# LANGUAGE ApplicativeDo   #-}
 {-# LANGUAGE MultiWayIf      #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE Strict          #-}
 
 module Main where
 
