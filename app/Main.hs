@@ -13,6 +13,7 @@ import           Util
 
 data Command = JumpCommand { key :: String }
              | ListCommand
+             | PrintJumperCommand { key :: String }
              | SetJumperCommand { key :: String, dst :: String }
              | UnsetJumperCommand { key :: String }
              deriving Show
@@ -21,6 +22,10 @@ parseCommand :: [String] -> Command
 parseCommand [] = parseCommand ["-l"]
 parseCommand (cmd:xs)
   | cmd `elem` ["-l", "--list"] = ListCommand
+  | cmd `elem` ["-p", "--print"] = let
+      key:_ = xs
+      in
+      PrintJumperCommand key
   | cmd `elem` ["-s", "--set"] = let
       key:dst:_ = xs
       in
@@ -33,14 +38,24 @@ parseCommand (cmd:xs)
 
 exec :: Command -> IO ()
 exec ListCommand            = load >>= listJumpers
+exec PrintJumperCommand{..} = load >>= printJumper key
 exec JumpCommand{..}        = load >>= jump key
 exec SetJumperCommand{..}   = load >>= setJumper key dst
 exec UnsetJumperCommand{..} = load >>= unsetJumper key
 
+fmtJumper :: String -> String -> IO ()
+fmtJumper key dst = putStrLn $ printf "echo \"%s -> %s\";" key dst
+
 listJumpers :: JStore -> IO ()
-listJumpers = mapM_ ( \(key, dst) ->
-                        putStrLn $ printf "echo \"%s -> %s\"" key dst
-                    ) . listAll
+listJumpers = mapM_ (uncurry fmtJumper) . listAll
+
+printJumper :: String -> JStore -> IO ()
+printJumper key store = let
+  maybeDst = query key store
+  in
+  case maybeDst of
+    Just dst -> fmtJumper key dst
+    Nothing  -> putStrLn $ printf "echo \"No such target: %s\"" key
 
 jump :: String -> JStore -> IO ()
 jump key store = let
@@ -48,7 +63,7 @@ jump key store = let
   in
   case maybeDst of
     Just dst -> expandHome dst >>= putStrLn . printf "cd %s"
-    Nothing -> putStrLn $ printf "echo \"No such target: %s\"" key
+    Nothing  -> putStrLn $ printf "echo \"No such target: %s\"" key
 
 setJumper :: String -> String -> JStore -> IO ()
 setJumper key dst = save . update (key, dst)
