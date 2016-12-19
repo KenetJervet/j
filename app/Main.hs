@@ -55,8 +55,8 @@ printJumper key store = let
   maybeDst = query key store
   in
   case maybeDst of
-    Just dst -> fmtJumper key dst
-    Nothing  -> putStrLn $ printf "echo \"No such jumper: %s\"" key
+    Just dst -> putStrLn $ printf "echo \"%s\"" dst
+    Nothing  -> putStrLn ""
 
 jump :: String -> JStore -> IO ()
 jump key store = let
