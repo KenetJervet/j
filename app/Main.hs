@@ -56,7 +56,7 @@ printJumper key store = let
   in
   case maybeDst of
     Just dst -> fmtJumper key dst
-    Nothing  -> putStrLn $ printf "echo \"No such target: %s\"" key
+    Nothing  -> putStrLn $ printf "echo \"No such jumper: %s\"" key
 
 jump :: String -> JStore -> IO ()
 jump key store = let
@@ -64,7 +64,7 @@ jump key store = let
   in
   case maybeDst of
     Just dst -> expandHome dst >>= putStrLn . printf "cd %s"
-    Nothing  -> putStrLn $ printf "echo \"No such target: %s\"" key
+    Nothing  -> putStrLn $ printf "echo \"No such jumper: %s\"" key
 
 setJumper :: String -> String -> JStore -> IO ()
 setJumper key dst = save . update (key, dst)
