@@ -66,7 +66,7 @@ jump jumpTo store = let
   maybeDst = query key store
   in
   case maybeDst of
-    Just dst -> expandHome dst >>= putStrLn . printf "cd %s" . (++ '/':remaining)
+    Just dst -> expandHome dst >>= putStrLn . printf "cd %s" . (++ remaining)
     Nothing  -> putStrLn $ printf "echo \"No such jumper: %s\"" key
 
 setJumper :: String -> String -> JStore -> IO ()

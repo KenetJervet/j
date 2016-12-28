@@ -42,6 +42,13 @@ c -> ~/Chest
 ~/Lab/personal $ 
 ```
 
+Remaining literal sections are allowed after a key, e.g.
+
+```bash
+~ $ j p/j/tests
+~/Lab/personal/j/test $
+```
+
 ### Add a jumper (or overwrite an existing one)
 
 ```bash
