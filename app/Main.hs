@@ -5,6 +5,8 @@
 
 module Main where
 
+import           Data.List          (elemIndex, splitAt)
+import           Data.Maybe
 import           J
 import           JAdapter
 import           System.Directory
@@ -12,7 +14,7 @@ import           System.Environment
 import           Text.Printf
 import           Util
 
-data Command = JumpCommand { key :: String }
+data Command = JumpCommand { jumpTo :: String }
              | ListCommand
              | PrintJumperCommand { key :: String }
              | SetJumperCommand { key :: String, dst :: String }
@@ -40,7 +42,7 @@ parseCommand (cmd:xs)
 exec :: Command -> IO ()
 exec ListCommand            = load >>= listJumpers
 exec PrintJumperCommand{..} = load >>= printJumper key
-exec JumpCommand{..}        = load >>= jump key
+exec JumpCommand{..}        = load >>= jump jumpTo
 exec SetJumperCommand{..}   = load >>= setJumper key dst
 exec UnsetJumperCommand{..} = load >>= unsetJumper key
 
@@ -59,11 +61,12 @@ printJumper key store = let
     Nothing  -> putStrLn ""
 
 jump :: String -> JStore -> IO ()
-jump key store = let
+jump jumpTo store = let
+  (key, remaining) = fromMaybe (jumpTo, "") (elemIndex '/' jumpTo >>= return . flip splitAt jumpTo)
   maybeDst = query key store
   in
   case maybeDst of
-    Just dst -> expandHome dst >>= putStrLn . printf "cd %s"
+    Just dst -> expandHome dst >>= putStrLn . printf "cd %s" . (++ '/':remaining)
     Nothing  -> putStrLn $ printf "echo \"No such jumper: %s\"" key
 
 setJumper :: String -> String -> JStore -> IO ()
