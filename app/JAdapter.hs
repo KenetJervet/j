@@ -7,7 +7,7 @@ import           System.IO.Unsafe
 import           Util
 
 defaultJStoreFile :: FilePath
-defaultJStoreFile = unsafePerformIO $ expandHome "~/.j"
+defaultJStoreFile = unsafePerformIO $ expandHome "~/.j.conf"
 
 load :: IO JStore
 load = loadFile defaultJStoreFile

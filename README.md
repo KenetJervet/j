@@ -78,4 +78,4 @@ Might be useful as a quoted expression
 
 ## Notes
 
-The jumpers are saved as `~/.j`. It's a simple csv file of k/v pairs. You can easily modify it with your favorite editor as you wish.
+The jumpers are saved as `~/.j.conf`. It's a simple csv file of k/v pairs. You can easily modify it with your favorite editor as you wish.
