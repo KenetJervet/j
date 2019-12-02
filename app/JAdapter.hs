@@ -6,6 +6,7 @@ import           System.IO.Error
 import           System.IO.Unsafe
 import           Util
 
+{-# NOINLINE defaultJStoreFile #-}
 defaultJStoreFile :: FilePath
 defaultJStoreFile = unsafePerformIO $ expandHome "~/.j.conf"
 
