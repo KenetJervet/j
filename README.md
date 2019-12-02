@@ -17,6 +17,14 @@ j () {
 }
 ```
 
+### Fish
+
+```fish
+function j
+    eval (eval ".j $argv")
+end
+```
+
 ### Others
 
 TODO
